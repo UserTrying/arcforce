@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ARCFORCE</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div id="menu">
+    <h1>ARCFORCE</h1>
+    <p>Fantasy Military Platformer</p>
+    <button onclick="startGame('solo')">Solo</button>
+    <button onclick="startGame('coop')">Co-op</button>
+    <button onclick="startGame('pvp')">PvP</button>
+    <div id="leaderboard"></div>
+  </div>
+
+  <canvas id="gameCanvas"></canvas>
+
+  <script src="leaderboard.js"></script>
+  <script src="game.js"></script>
+
+</body>
+</html>
