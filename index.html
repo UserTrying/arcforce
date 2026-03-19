@@ -21,6 +21,16 @@
 
   <script src="leaderboard.js"></script>
   <script src="game.js"></script>
+<script>
+    if ("serviceWorker" in navigator) {
+      // checks if this browser supports service workers
+      // "serviceWorker" in navigator = does this property exist on the browser
+
+      navigator.serviceWorker.register("/arcforce/sw.js")
+      // points the browser to your service worker file
+      // uses the full GitHub Pages path not just sw.js
+    }
+  </script>
 
 </body>
 </html>
