@@ -6,7 +6,7 @@
 const BIN_ID = "69bad304c3097a1dd53881f6"
 // your bin's unique address on JSONBin
 
-const API_KEY = "$2a$10$UfULXxWgjXmfhaXfs7EqEu2psvZz7yGwJtrKP29ff/cNt2E/huo92"
+const API_KEY = "$2a$10$UfULXxWgjXmfHAXfs7EqEu2psvZz7yGwJtrKP29ff/cNt2E/huo92"
 // your restricted key, proves you're allowed to access the bin
 
 const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`
