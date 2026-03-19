@@ -8,8 +8,7 @@ const BIN_ID = "69bad304c3097a1dd53881f6"
 // your specific bin on JSONBin — like a mailbox number
 
 const API_KEY = "PASTE_YOUR_NEW_KEY_HERE"
-// your restricted key — proves you're allowed in
-// you need to regenerate this on JSONBin since it was exposed publicly
+// your restricted key — regenerate on JSONBin since old one was exposed
 
 const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`
 // full address of your bin
@@ -24,7 +23,7 @@ const HEADERS = {
 // Content-Type tells JSONBin you're sending JSON not plain text
 
 const LOCAL_KEY = "arcforce_scores"
-// the name used to store scores in the browser's localStorage
+// name used to store scores in the browser's localStorage
 // like naming a folder on the device
 
 const UNSYNCED_KEY = "arcforce_unsynced"
@@ -34,29 +33,26 @@ const UNSYNCED_KEY = "arcforce_unsynced"
 // ============================================================
 // GROUP 2 — LOCALSTORAGE HELPERS
 // read and write scores directly on the device
-// no internet needed. these are the building blocks for offline support
+// no internet needed. building blocks for offline support
 // ============================================================
 
 function getLocalScores() {
   const stored = localStorage.getItem(LOCAL_KEY)
   // getItem looks for data saved under that name
   // returns null if nothing saved yet
-
   return stored ? JSON.parse(stored) : []
-  // ternary — shorthand if/else
-  // if stored exists: parse text back into JS array
-  // if nothing exists: return empty array so nothing breaks
+  // ternary — if stored exists parse it back into JS array
+  // if nothing exists return empty array so nothing breaks
 }
 
 function saveLocalScores(scores) {
   localStorage.setItem(LOCAL_KEY, JSON.stringify(scores))
-  // localStorage can only hold text — stringify converts array to text first
+  // localStorage only holds text — stringify converts array first
 }
 
 function getUnsyncedScores() {
   const stored = localStorage.getItem(UNSYNCED_KEY)
   return stored ? JSON.parse(stored) : []
-  // same pattern — separate bucket for offline-only scores
 }
 
 function saveUnsyncedScores(scores) {
@@ -73,37 +69,30 @@ function saveUnsyncedScores(scores) {
 
 async function syncToJSONBin() {
   const unsynced = getUnsyncedScores()
-  // grab anything saved while offline
 
   if (!navigator.onLine || unsynced.length === 0) return
-  // navigator.onLine = built-in browser check for connection
-  // if offline OR nothing to sync — stop here, do nothing
+  // navigator.onLine = built-in browser connection check
+  // if offline OR nothing to sync — stop, do nothing
 
   try {
-    const response = await fetch(BIN_URL, {
-      method: "GET",
-      headers: HEADERS
-    })
+    const response = await fetch(BIN_URL, { method: "GET", headers: HEADERS })
     const data = await response.json()
     const onlineScores = data.record.scores
     // read what's already on JSONBin first so we don't overwrite it
 
     const merged = [...onlineScores, ...unsynced]
-    // spread operator — unpacks both arrays into one
-    // like pouring two card decks into one pile
+    // spread operator — unpacks both arrays into one pile
 
     await fetch(BIN_URL, {
       method: "PUT",
       headers: HEADERS,
       body: JSON.stringify({ scores: merged })
     })
-    // PUT sends the full merged array back up to JSONBin
 
     saveUnsyncedScores([])
-    // clear the unsynced bucket — everything is now live
+    // clear unsynced bucket — everything is now live
   } catch {
-    // sync failed even though online — leave unsynced bucket as is
-    // will try again next time the page loads
+    // sync failed — leave unsynced bucket as is, try again next load
   }
 }
 
@@ -111,8 +100,8 @@ async function syncToJSONBin() {
 // ============================================================
 // GROUP 4 — READ SCORES
 // runs on page load after sync
-// online: fetches from JSONBin, caches a copy locally
-// offline: reads from local cache instead
+// online: fetches from JSONBin, caches locally
+// offline: reads from local cache
 // displays top 5 prominently, next 20 below
 // ============================================================
 
@@ -121,15 +110,11 @@ async function loadLeaderboard() {
 
   if (navigator.onLine) {
     try {
-      const response = await fetch(BIN_URL, {
-        method: "GET",
-        headers: HEADERS
-      })
+      const response = await fetch(BIN_URL, { method: "GET", headers: HEADERS })
       const data = await response.json()
       scores = data.record.scores
       saveLocalScores(scores)
       // cache fresh copy every successful fetch
-      // so offline always has the latest version available
     } catch {
       scores = getLocalScores()
       // online but fetch failed — fall back to local cache
@@ -143,72 +128,52 @@ async function loadLeaderboard() {
     b.score - a.score || a.name.localeCompare(b.name)
   )
   // sort by score highest first
-  // if two scores tie, sort those by name alphabetically
+  // ties broken alphabetically by name
   // localeCompare handles accents and special characters by region
 
   const top5 = sorted.slice(0, 5)
-  // positions 0,1,2,3,4
-
   const next20 = sorted.slice(5, 25)
-  // positions 5 through 24 — picks up exactly where top5 left off
 
   const box = document.getElementById("leaderboard")
-  // grabs <div id="leaderboard"> from index.html
-
   box.innerHTML =
     top5.map(s => `<p class="top">${s.name} — ${s.score}</p>`).join("") +
     next20.map(s => `<p>${s.name} — ${s.score}</p>`).join("")
-  // map turns each score object into an HTML string
-  // class="top" on top5 so you can style them differently in CSS
-  // join("") stitches the array of strings into one block
-  // + concatenates top5 block and next20 block together
 }
 
 
 // ============================================================
 // GROUP 5 — WRITE A SCORE
 // called automatically when a game ends
-// always saves locally first — then tries JSONBin if online
-// if offline or fetch fails, flags score for sync later
+// always saves locally first
+// then tries JSONBin if online
+// flags for sync if offline or fetch fails
 // ============================================================
 
 async function submitScore(playerName, playerScore) {
   const newScore = { name: playerName, score: playerScore }
-  // package name and score together as one object
 
   const localScores = getLocalScores()
   localScores.push(newScore)
   saveLocalScores(localScores)
   // save locally first no matter what
-  // device always has a copy even if everything else fails
 
   if (navigator.onLine) {
     try {
-      const response = await fetch(BIN_URL, {
-        method: "GET",
-        headers: HEADERS
-      })
+      const response = await fetch(BIN_URL, { method: "GET", headers: HEADERS })
       const data = await response.json()
       const scores = data.record.scores
-      // read first so we don't overwrite existing scores
-
       scores.push(newScore)
-      // add new score to the existing list
 
       await fetch(BIN_URL, {
         method: "PUT",
         headers: HEADERS,
         body: JSON.stringify({ scores: scores })
       })
-      // PUT sends the full updated list back to JSONBin
-      // JSON.stringify converts JS object to text for sending
-      // opposite of what .json() did when reading
-
     } catch {
       const unsynced = getUnsyncedScores()
       unsynced.push(newScore)
       saveUnsyncedScores(unsynced)
-      // online but fetch failed — flag for next sync
+      // online but failed — flag for next sync
     }
   } else {
     const unsynced = getUnsyncedScores()
@@ -218,22 +183,21 @@ async function submitScore(playerName, playerScore) {
   }
 
   loadLeaderboard()
-  // refresh the display immediately so new score shows up
 }
 
 
 // ============================================================
-// INIT — runs when page loads
-// sync first, then display
+// GROUP 6 — LEADERBOARD MODAL
+// opens and closes the ACF SCORES popup
+// fetches fresh data every time it opens
 // ============================================================
 
 async function openLeaderboard() {
   const modal = document.getElementById("lb-modal")
   const box = document.getElementById("lb-scores")
-  // grab the modal and the scores container inside it
 
   modal.classList.remove("hidden")
-  // remove hidden class to show the modal
+  // remove hidden to show modal
 
   let scores = []
 
@@ -249,8 +213,6 @@ async function openLeaderboard() {
   } else {
     scores = getLocalScores()
   }
-  // same online/offline logic as loadLeaderboard
-  // reused here so modal always shows freshest possible data
 
   const sorted = scores.sort((a, b) =>
     b.score - a.score || a.name.localeCompare(b.name)
@@ -266,8 +228,13 @@ async function openLeaderboard() {
 
 function closeLeaderboard() {
   document.getElementById("lb-modal").classList.add("hidden")
-  // add hidden back to close the modal
+  // add hidden back to close modal
 }
+
+
+// ============================================================
+// INIT — runs when page loads
+// ============================================================
 
 syncToJSONBin()
 loadLeaderboard()

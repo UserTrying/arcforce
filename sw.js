@@ -1,6 +1,6 @@
-const CACHE_NAME = "arcforce-v1"
-// name of your cache — like a labeled storage box
-// change the version number anytime you want to force a fresh cache
+const CACHE_NAME = "arcforce-v2"
+// bumped to v2 — forces browser to dump old cache and download fresh files
+// bump this number any time you make CSS or JS changes
 
 const FILES_TO_CACHE = [
   "/arcforce/",
@@ -9,12 +9,11 @@ const FILES_TO_CACHE = [
   "/arcforce/game.js",
   "/arcforce/leaderboard.js"
 ]
-// every file your game needs to run
+// every file your game needs to run offline
 // stored exactly as they appear in your GitHub Pages URL
+
 self.addEventListener("install", event => {
   // self = the service worker itself, not the page
-  // addEventListener listens for the install moment
-
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
       return cache.addAll(FILES_TO_CACHE)
@@ -23,6 +22,7 @@ self.addEventListener("install", event => {
     })
   )
 })
+
 self.addEventListener("activate", event => {
   event.waitUntil(
     caches.keys().then(keys => {
@@ -30,38 +30,30 @@ self.addEventListener("activate", event => {
         keys
           .filter(key => key !== CACHE_NAME)
           // find any cache that isn't the current version
-
           .map(key => caches.delete(key))
           // delete each outdated one
-          // .map here isn't displaying anything — it's
-          // transforming each old key into a delete action
       )
     }).then(() => self.clients.claim())
     // take control of the page immediately after cleanup
   )
 })
+
 self.addEventListener("fetch", event => {
   event.respondWith(
     caches.match(event.request).then(cached => {
-      // check if we have this file saved already
-
       if (cached) return cached
-      // got it — serve from cache, no internet needed
+      // got it in cache — serve it, no internet needed
 
       return fetch(event.request).then(response => {
         // not cached — go get it from network
-
         const copy = response.clone()
-        // clone it because a response can only be read once
-        // one copy for the cache, one copy for the page
-
+        // clone because a response can only be read once
+        // one copy for the cache, one for the page
         caches.open(CACHE_NAME).then(cache => {
           cache.put(event.request, copy)
-          // save the fresh copy for next time
+          // save fresh copy for next time
         })
-
         return response
-        // send the original to the page
       })
     })
   )

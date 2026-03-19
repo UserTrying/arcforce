@@ -20,26 +20,24 @@
 
   <canvas id="gameCanvas"></canvas>
 
+  <div id="lb-modal" class="modal hidden">
+    <div class="modal-box">
+      <h2>ACF SCORES</h2>
+      <div id="lb-scores"></div>
+      <button onclick="closeLeaderboard()">Close</button>
+    </div>
+  </div>
+
   <script src="leaderboard.js"></script>
   <script src="game.js"></script>
-<script>
+  <script>
     if ("serviceWorker" in navigator) {
       // checks if this browser supports service workers
       // "serviceWorker" in navigator = does this property exist on the browser
-
       navigator.serviceWorker.register("/arcforce/sw.js")
-      // points the browser to your service worker file
-      // uses the full GitHub Pages path not just sw.js
+      // points to your service worker on GitHub Pages path
     }
   </script>
-<div id="lb-modal" class="modal hidden">
-  <div class="modal-box">
-    <h2>ACF SCORES</h2>
-    <div id="lb-scores"></div>
-    <button onclick="closeLeaderboard()">Close</button>
-  </div>
-</div>
 
 </body>
-
 </html>
