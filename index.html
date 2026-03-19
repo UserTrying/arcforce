@@ -103,6 +103,9 @@
     // only you know this exists
 
     document.addEventListener("keydown", e => {
+       if (document.activeElement.tagName === "INPUT") return
+// if user is typing in a text box, ignore the combo listener
+combo.push(e.key.toLowerCase())
       combo.push(e.key.toLowerCase())
       combo = combo.slice(-5)
       // only keep the last 5 keys pressed at any time
