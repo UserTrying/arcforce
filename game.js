@@ -40,7 +40,102 @@ const state = {
   gameOver: false,  // has the game ended?
 }
 
+// ============================================================
+// GROUP 2.5 — PLATFORMS
+// array of platform objects, each has x, y, width, height
+// drawn every frame, collision checked in physics later
+// ============================================================
 
+const platforms = [
+  { x: 0, y: canvas.height - 40, width: canvas.width, height: 40 },
+  // ground — full width, sits at the very bottom
+
+  { x: 200, y: canvas.height - 160, width: 180, height: 16 },
+  { x: 500, y: canvas.height - 260, width: 200, height: 16 },
+  { x: 820, y: canvas.height - 180, width: 160, height: 16 },
+  { x: 1050, y: canvas.height - 300, width: 220, height: 16 },
+  { x: 350, y: canvas.height - 380, width: 160, height: 16 },
+  // floating platforms at various heights
+]
+function drawBackground() {
+  // base sky — very dark blue-black
+  ctx.fillStyle = "#060612"
+  ctx.fillRect(0, 0, canvas.width, canvas.height)
+  // fills entire canvas with the base sky color
+
+  // arcane horizon glow — green
+  const glowGreen = ctx.createLinearGradient(0, canvas.height - 200, 0, canvas.height)
+  glowGreen.addColorStop(0, "rgba(80, 255, 140, 0)")
+  glowGreen.addColorStop(1, "rgba(80, 255, 140, 0.08)")
+  ctx.fillStyle = glowGreen
+  ctx.fillRect(0, canvas.height - 200, canvas.width, 200)
+  // createLinearGradient makes a fade from top to bottom
+  // addColorStop(0) is the top, addColorStop(1) is the bottom
+  // rgba last value is opacity — 0 is invisible, 1 is solid
+
+  // arcane horizon glow — purple on the other side
+  const glowPurple = ctx.createLinearGradient(0, canvas.height - 300, 0, canvas.height)
+  glowPurple.addColorStop(0, "rgba(160, 80, 255, 0)")
+  glowPurple.addColorStop(1, "rgba(160, 80, 255, 0.06)")
+  ctx.fillStyle = glowPurple
+  ctx.fillRect(0, canvas.height - 300, canvas.width / 2, 300)
+  // only covers left half for asymmetry
+
+  // city silhouette — jagged dark buildings in the distance
+  ctx.fillStyle = "#0d0d1a"
+  const buildings = [
+    { x: 0, w: 60, h: 120 },
+    { x: 55, w: 40, h: 80 },
+    { x: 90, w: 80, h: 160 },
+    { x: 165, w: 50, h: 100 },
+    { x: 210, w: 90, h: 200 },
+    { x: 295, w: 40, h: 130 },
+    { x: 330, w: 70, h: 90 },
+    { x: 395, w: 110, h: 170 },
+    { x: 500, w: 50, h: 140 },
+    { x: 545, w: 80, h: 110 },
+    { x: 620, w: 60, h: 190 },
+    { x: 675, w: 90, h: 80 },
+    { x: 760, w: 70, h: 150 },
+    { x: 825, w: 50, h: 120 },
+    { x: 870, w: 100, h: 180 },
+    { x: 965, w: 60, h: 100 },
+    { x: 1020, w: 80, h: 160 },
+    { x: 1095, w: 50, h: 90 },
+    { x: 1140, w: 70, h: 130 },
+  ]
+  buildings.forEach(b => {
+    ctx.fillRect(b.x, canvas.height - 40 - b.h, b.w, b.h)
+    // draws each building from the ground up
+    // canvas.height - 40 is just above the ground platform
+  })
+
+  // stars — small white dots scattered in the sky
+  ctx.fillStyle = "rgba(255, 255, 255, 0.6)"
+  const stars = [
+    [80, 40], [200, 20], [350, 60], [500, 30], [650, 50],
+    [780, 15], [900, 45], [1050, 25], [1150, 55], [1250, 35],
+    [140, 80], [420, 90], [720, 70], [980, 85], [1180, 75],
+  ]
+  stars.forEach(([x, y]) => {
+    ctx.fillRect(x, y, 2, 2)
+  })
+}
+
+function drawPlatforms() {
+  platforms.forEach(p => {
+    // stone base — dark grey
+    ctx.fillStyle = "#2a2a3a"
+    ctx.fillRect(p.x, p.y, p.width, p.height)
+    // draws the main platform rectangle
+
+    // arcane glow line on top edge
+    ctx.fillStyle = "rgba(125, 249, 170, 0.6)"
+    ctx.fillRect(p.x, p.y, p.width, 3)
+    // thin bright green line across the very top
+    // gives it the arcane energy feel
+  })
+}
 // ============================================================
 // GROUP 3 — PLAYERS
 // each player is an object holding everything about them
@@ -183,6 +278,9 @@ function gameLoop() {
   ctx.clearRect(0, 0, canvas.width, canvas.height)
   // wipe the entire canvas clean each frame
   // without this, everything drawn would stack up
+
+  drawBackground()
+  drawPlatforms()
 
   getInput(p1)
   if (state.mode !== "solo") getInput(p2)
