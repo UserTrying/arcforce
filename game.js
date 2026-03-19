@@ -479,7 +479,7 @@ function triggerGameOver() {
 
 function handleSubmitScore() {
   const nameInput = document.getElementById("player-name")
-  const name = nameInput.value.trim().toUpperCase()
+  const name = nameInput.value.trim()
   // grab the typed name, remove extra spaces, make it uppercase
 
   if (!name) {
