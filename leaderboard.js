@@ -4,8 +4,7 @@
 // think of this like a contact card for JSONBin
 // ============================================================
 
-const BIN_ID = "69bad304c3097a1dd53881f6
-"
+const BIN_ID = "69bad304c3097a1dd53881f6"
 // your bin's unique ID on JSONBin — like a mailbox number
 
 const API_KEY = "$2a$10$UfULXxWgjXmfHAXfs7EqEu2psvZz7yGwJtrKP29ff/cNt2E/huo92"
