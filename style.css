@@ -2,61 +2,96 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  /* applies to every element on the page
+     margin/padding 0 removes default spacing browsers add
+     box-sizing makes sizing math predictable */
 }
 
 body {
   background: #0a0a0f;
+  /* near-black dark background */
+
   color: #e0e0ff;
+  /* soft light purple as default text color */
+
   font-family: 'Courier New', monospace;
+  /* monospace font gives the military terminal feel */
+
   display: flex;
   justify-content: center;
   align-items: center;
+  /* these three together center everything on the screen */
+
   height: 100vh;
+  /* 100vh means 100% of the visible screen height */
+
   overflow: hidden;
+  /* hides any content that accidentally goes off screen */
 }
 
 #menu {
   text-align: center;
+  /* centers all text inside the menu */
+
   display: flex;
   flex-direction: column;
   gap: 16px;
+  /* stacks menu items vertically with 16px space between each */
 }
 
 #menu h1 {
   font-size: 64px;
   color: #7df9aa;
+  /* bright green title */
+
   letter-spacing: 8px;
+  /* spreads letters apart for a bold look */
+
   text-shadow: 0 0 20px #7df9aa;
+  /* green glow effect around the title */
 }
 
 #menu p {
   color: #888;
+  /* dim grey for the subtitle */
+
   letter-spacing: 4px;
   font-size: 14px;
 }
 
 button {
   background: transparent;
+  /* see-through button background */
+
   border: 2px solid #7df9aa;
   color: #7df9aa;
+  /* green outline and text */
+
   padding: 12px 40px;
   font-size: 18px;
   font-family: 'Courier New', monospace;
   letter-spacing: 4px;
   cursor: pointer;
+  /* shows hand cursor when hovering */
+
   transition: all 0.2s;
+  /* any change (like hover) animates over 0.2 seconds */
 }
 
 button:hover {
   background: #7df9aa;
   color: #0a0a0f;
+  /* flips colors on hover, green fill dark text */
 }
 
 #gameCanvas {
   display: none;
+  /* hidden until a game mode is started */
+
   position: fixed;
   top: 0;
   left: 0;
+  /* when shown, locks it to cover the full screen */
 }
 
 #leaderboard {
@@ -64,9 +99,8 @@ button:hover {
   font-size: 13px;
   color: #aaa;
   letter-spacing: 2px;
+  /* small dimmed score preview on the main menu */
 }
-
-/* ---- MODAL ---- */
 
 .modal {
   position: fixed;
@@ -74,31 +108,41 @@ button:hover {
   left: 0;
   width: 100%;
   height: 100%;
+  /* covers the entire screen */
+
   background: rgba(0, 0, 0, 0.88);
+  /* near-black see-through overlay behind the popup */
+
   display: flex;
   justify-content: center;
   align-items: center;
+  /* centers the popup box on screen */
+
   z-index: 100;
+  /* makes sure popup sits on top of everything else */
 }
 
 .modal.hidden {
   display: none;
-  /* .modal.hidden targets both classes together
-     so it beats .modal's display: flex
-     this is CSS specificity — more specific selector wins */
+  /* hides the modal completely when this class is added */
 }
 
 .modal-box {
   background: #0a0a0f;
   border: 2px solid #7df9aa;
+  /* dark box with green border */
+
   padding: 40px;
   display: flex;
   flex-direction: column;
   gap: 12px;
+  /* stacks content inside with spacing */
+
   max-height: 80vh;
   overflow-y: auto;
+  /* if scores list gets long, box scrolls instead of breaking */
+
   min-width: 320px;
-  /* solid background so menu doesn't bleed through */
 }
 
 .modal-box h2 {
@@ -107,16 +151,19 @@ button:hover {
   text-shadow: 0 0 20px #7df9aa;
   text-align: center;
   margin-bottom: 8px;
+  /* styled popup title, same glow as main title */
 }
 
 .modal-box p.top {
   color: #7df9aa;
   font-size: 15px;
   letter-spacing: 2px;
+  /* top 5 scores show in bright green */
 }
 
 .modal-box p {
   color: #aaa;
   font-size: 13px;
   letter-spacing: 2px;
+  /* scores 6-25 show in dim grey */
 }

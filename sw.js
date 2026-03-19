@@ -1,6 +1,7 @@
 const CACHE_NAME = "arcforce-v2"
-// bumped to v2 — forces browser to dump old cache and download fresh files
-// bump this number any time you make CSS or JS changes
+// name for this version of the cache
+// change the version number when you update files
+// so old cached versions get replaced
 
 const FILES_TO_CACHE = [
   "/arcforce/",
@@ -9,21 +10,20 @@ const FILES_TO_CACHE = [
   "/arcforce/game.js",
   "/arcforce/leaderboard.js"
 ]
-// every file your game needs to run offline
-// stored exactly as they appear in your GitHub Pages URL
+// list of every file to save on the device for offline use
 
 self.addEventListener("install", event => {
-  // self = the service worker itself, not the page
+  // runs once when the service worker is first set up
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
       return cache.addAll(FILES_TO_CACHE)
-      // opens your named cache box
-      // addAll fetches and saves every file in the list
+      // downloads and saves every file in the list
     })
   )
 })
 
 self.addEventListener("activate", event => {
+  // runs after install, cleans up any old cached versions
   event.waitUntil(
     caches.keys().then(keys => {
       return Promise.all(
@@ -31,29 +31,28 @@ self.addEventListener("activate", event => {
           .filter(key => key !== CACHE_NAME)
           // find any cache that isn't the current version
           .map(key => caches.delete(key))
-          // delete each outdated one
+          // delete it
       )
     }).then(() => self.clients.claim())
-    // take control of the page immediately after cleanup
+    // take control of the page immediately
   )
 })
 
 self.addEventListener("fetch", event => {
+  // runs every time the page tries to load something
   event.respondWith(
     caches.match(event.request).then(cached => {
       if (cached) return cached
-      // got it in cache — serve it, no internet needed
+      // if we have it saved, serve it from cache (works offline)
 
       return fetch(event.request).then(response => {
-        // not cached — go get it from network
         const copy = response.clone()
-        // clone because a response can only be read once
-        // one copy for the cache, one for the page
         caches.open(CACHE_NAME).then(cache => {
           cache.put(event.request, copy)
-          // save fresh copy for next time
+          // save a copy of new files as they load
         })
         return response
+        // also return the real response to the page
       })
     })
   )

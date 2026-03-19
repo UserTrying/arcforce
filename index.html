@@ -1,42 +1,86 @@
 <!DOCTYPE html>
+<!-- tells the browser this is a modern HTML page -->
+
 <html lang="en">
+<!-- start of the page, lang="en" tells browser it's in english -->
+
 <head>
+  <!-- head holds setup info, nothing here shows on screen -->
+
   <meta charset="UTF-8">
+  <!-- lets the page use all characters, accents, symbols etc -->
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- makes the page fit properly on any screen size -->
+
   <title>ARCFORCE</title>
+  <!-- the name that shows on the browser tab -->
+
   <link rel="stylesheet" href="style.css">
+  <!-- connects style.css so our styling actually works -->
 </head>
+
 <body>
+  <!-- everything inside body shows on screen -->
 
   <div id="menu">
+    <!-- the main menu box, hidden when game starts -->
+
     <h1>ARCFORCE</h1>
+    <!-- big title at the top -->
+
     <p>Fantasy Military Platformer</p>
+    <!-- small subtitle under the title -->
+
     <button onclick="startGame('solo')">Solo</button>
+    <!-- clicking this runs startGame() in game.js with mode 'solo' -->
+
     <button onclick="startGame('coop')">Co-op</button>
+    <!-- same but mode 'coop' for two players vs enemies -->
+
     <button onclick="startGame('pvp')">PvP</button>
+    <!-- same but mode 'pvp' for two players vs each other -->
+
     <button onclick="openLeaderboard()">Leaderboard</button>
+    <!-- opens the score popup from leaderboard.js -->
+
     <div id="leaderboard"></div>
+    <!-- empty box that leaderboard.js fills with top scores -->
   </div>
 
   <canvas id="gameCanvas"></canvas>
+  <!-- the game screen, hidden until a mode is picked -->
 
   <div id="lb-modal" class="modal hidden">
+    <!-- the leaderboard popup, hidden by default -->
+
     <div class="modal-box">
+      <!-- the inner styled box inside the popup -->
+
       <h2>ACF SCORES</h2>
+      <!-- popup title -->
+
       <div id="lb-scores"></div>
+      <!-- leaderboard.js fills this with scores when popup opens -->
+
       <button onclick="closeLeaderboard()">Close</button>
+      <!-- hides the popup again -->
     </div>
   </div>
 
   <script src="leaderboard.js"></script>
+  <!-- loads leaderboard code first since game.js needs it -->
+
   <script src="game.js"></script>
+  <!-- loads all the game logic -->
+
   <script>
     if ("serviceWorker" in navigator) {
-      // checks if this browser supports service workers
-      // "serviceWorker" in navigator = does this property exist on the browser
       navigator.serviceWorker.register("/arcforce/sw.js")
-      // points to your service worker on GitHub Pages path
     }
+    <!-- checks if the browser supports offline mode
+         if yes, registers sw.js which handles caching files
+         so the game works without internet -->
   </script>
 
 </body>
