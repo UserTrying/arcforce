@@ -147,7 +147,7 @@ const p1 = {
   x: 100,           // starting position from left
   y: 300,           // starting position from top
   width: 32,        // how wide the player rectangle is
-  height: 48,       // how tall the player rectangle is
+  height: 36,       // how tall the player rectangle is
   velX: 0,          // horizontal speed (negative = left, positive = right)
   velY: 0,          // vertical speed (negative = up, positive = down)
   speed: 5,         // how fast player moves left/right
@@ -285,7 +285,10 @@ function gameLoop() {
   drawPlatforms()
 
   getInput(p1)
-  if (state.mode !== "solo") getInput(p2)
+  applyPhysics(p1)
+  if (state.mode !== "solo") {
+      getInput(p2)
+      applyPhysics(p2)
   // process keyboard input for active players
 
   ctx.fillStyle = p1.color
@@ -301,4 +304,56 @@ function gameLoop() {
   requestAnimationFrame(gameLoop)
   // tells the browser to run gameLoop again next frame
   // this is what makes it loop ~60 times per second
+}
+
+// ============================================================
+// GROUP 6 — PHYSICS
+// runs every frame for each active player
+// applies gravity, moves the player, checks platform collision
+// ============================================================
+
+const GRAVITY = 0.4
+// added to velY every frame — small but stacks up fast
+
+function applyPhysics(player) {
+  player.velY += GRAVITY
+  // pull player down every frame
+  // velY grows each frame until something stops it
+
+  player.x += player.velX
+  player.y += player.velY
+  // actually move the player by their current velocity
+
+  player.onGround = false
+  // assume not on ground every frame
+  // collision below will set it back to true if needed
+
+  platforms.forEach(p => {
+    const inXRange = player.x + player.width > p.x && player.x < p.x + p.width
+    // checks if player horizontally overlaps the platform
+
+    const prevBottom = player.y + player.height - player.velY
+    // where player's feet WERE last frame before moving
+
+    const currBottom = player.y + player.height
+    // where player's feet ARE now
+
+    const landingOnTop = prevBottom <= p.y && currBottom >= p.y
+    // true if player just crossed through the top edge
+
+    if (inXRange && landingOnTop) {
+      player.y = p.y - player.height
+      // snap player to sit exactly on top of platform
+
+      player.velY = 0
+      // stop downward movement
+
+      player.onGround = true
+      // allow jumping again
+    }
+  })
+
+  // screen boundaries — stop player leaving the sides
+  if (player.x < 0) player.x = 0
+  if (player.x + player.width > canvas.width) player.x = canvas.width - player.width
 }
