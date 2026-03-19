@@ -144,10 +144,12 @@ async function loadLeaderboard() {
 
   const box = document.getElementById("leaderboard")
   // grab the leaderboard div from index.html
-
+if (box) {
   box.innerHTML =
     top5.map(s => `<p class="top">${s.name} — ${s.score}</p>`).join("") +
     next20.map(s => `<p>${s.name} — ${s.score}</p>`).join("")
+}
+// only updates if the element exists — safe if div is removed
   // map turns each score object into a line of HTML
   // top 5 get the green 'top' class, next 20 get grey
   // join("") stitches all lines into one block the browser can render
