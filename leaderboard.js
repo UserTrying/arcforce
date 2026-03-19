@@ -299,6 +299,3 @@ async function clearScores() {
 
 syncToJSONBin()
 // check for unsynced offline scores and upload them
-
-loadLeaderboard()
-// load and display scores on the main menu
