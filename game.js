@@ -299,7 +299,7 @@ function gameLoop() {
 
   drawBackground()
   drawPlatforms()
-
+  checkGameOver()
   getInput(p1)
   applyPhysics(p1)
   updateBullets(p1)
@@ -380,7 +380,84 @@ function applyPhysics(player) {
   if (player.x < 0) player.x = 0
   if (player.x + player.width > canvas.width) player.x = canvas.width - player.width
 }
+// ============================================================
+// GROUP 9 — GAME OVER
+// checks if players have fallen off screen
+// triggers game over screen when conditions are met
+// ============================================================
 
+function checkGameOver() {
+  if (p1.y > canvas.height) p1.alive = false
+  if (p2.y > canvas.height) p2.alive = false
+  // if player falls past bottom of screen, mark them dead
+
+  let over = false
+
+  if (state.mode === "solo" && !p1.alive) over = true
+  // solo — p1 dies = game over
+
+  if (state.mode === "coop" && !p1.alive && !p2.alive) over = true
+  // coop — both must die
+
+  if (state.mode === "pvp" && (!p1.alive || !p2.alive)) over = true
+  // pvp — either dies = game over
+
+  if (over) triggerGameOver()
+}
+
+function triggerGameOver() {
+  state.running = false
+  // stops the game loop
+
+  const screen = document.getElementById("gameover-screen")
+  const scoreText = document.getElementById("final-score")
+
+  scoreText.textContent = `SCORE: ${state.score}`
+  screen.classList.remove("hidden")
+  // show the game over screen with final score
+}
+
+function handleSubmitScore() {
+  const nameInput = document.getElementById("player-name")
+  const name = nameInput.value.trim().toUpperCase()
+  // grab and clean up the name they typed
+  // toUpperCase keeps it consistent with the game's style
+
+  if (!name) {
+    nameInput.placeholder = "NAME REQUIRED"
+    return
+    // don't submit if empty, just flash the placeholder
+  }
+
+  submitScore(name, state.score)
+  // calls leaderboard.js submitScore() with name and score
+
+  returnToMenu()
+}
+
+function returnToMenu() {
+  document.getElementById("gameover-screen").classList.add("hidden")
+  document.getElementById("menu").style.display = "flex"
+  canvas.style.display = "none"
+  // hide game over screen, show menu, hide canvas
+
+  p1.alive = true
+  p1.x = 100
+  p1.y = 300
+  p1.velX = 0
+  p1.velY = 0
+  p1.health = 100
+  p1.bullets = []
+
+  p2.alive = true
+  p2.x = canvas.width - 150
+  p2.y = 300
+  p2.velX = 0
+  p2.velY = 0
+  p2.health = 100
+  p2.bullets = []
+  // reset both players fully for next game
+}
 // ============================================================
 // GROUP 8 — BULLETS
 // moves bullets every frame, removes them if off screen

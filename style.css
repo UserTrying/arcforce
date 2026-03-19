@@ -167,3 +167,19 @@ button:hover {
   letter-spacing: 2px;
   /* scores 6-25 show in dim grey */
 }
+
+#player-name {
+  background: transparent;
+  border: 2px solid #7df9aa;
+  color: #7df9aa;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 4px;
+  text-align: center;
+  outline: none;
+}
+
+#player-name::placeholder {
+  color: #444;
+}

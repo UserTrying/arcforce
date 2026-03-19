@@ -53,6 +53,15 @@
 
   <div id="lb-modal" class="modal hidden">
     <!-- the leaderboard popup, hidden by default -->
+    <div id="gameover-screen" class="modal hidden">
+  <div class="modal-box">
+    <h2>GAME OVER</h2>
+    <p id="final-score"></p>
+    <input id="player-name" type="text" placeholder="ENTER NAME" maxlength="16" />
+    <button onclick="handleSubmitScore()">SUBMIT SCORE</button>
+    <button onclick="returnToMenu()">MAIN MENU</button>
+  </div>
+</div>
 
     <div class="modal-box">
       <!-- the inner styled box inside the popup -->
