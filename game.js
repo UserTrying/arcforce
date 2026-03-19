@@ -1,4 +1,3 @@
-// ============================================================
 // GROUP 1 — CANVAS SETUP
 // grabs the game screen and makes it fill the full window
 // ============================================================
@@ -158,6 +157,7 @@ const p1 = {
   alive: true,
   color: "#7df9aa", // green — player 1's color
   bullets: [],      // list of active bullets this player fired
+  shootCooldown: 0,
   facing: 1,        // 1 = facing right, -1 = facing left
   controls: {
     left: "a",
@@ -244,8 +244,24 @@ function getInput(player) {
 // hides the menu, shows the canvas, kicks off the game loop
 // ============================================================
 function shoot(player) {
-  // placeholder — bullets group will fill this in later
+  if (player.shootCooldown > 0) return
+  // if timer isn't at 0 yet, can't shoot again
+
+  player.bullets.push({
+    x: player.facing === 1 ? player.x + player.width : player.x,
+    // bullet starts at front of player based on direction they face
+    y: player.y + player.height / 2,
+    // vertically centered on player
+    velX: player.facing * 12,
+    // moves in the direction player is facing, speed 12
+    owner: player
+    // tracks who fired it, needed for pvp damage later
+  })
+
+  player.shootCooldown = 8
+  // 8 frames before they can shoot again
 }
+  // placeholder — bullets group will fill this in later
 function startGame(mode) {
   state.mode = mode
   // save which mode was picked
@@ -286,6 +302,12 @@ function gameLoop() {
 
   getInput(p1)
   applyPhysics(p1)
+  updateBullets(p1)
+  drawBullets(p1)
+if (state.mode !== "solo") {
+  updateBullets(p2)
+  drawBullets(p2)
+}
   if (state.mode !== "solo") {
       getInput(p2)
       applyPhysics(p2)
@@ -358,3 +380,38 @@ function applyPhysics(player) {
   if (player.x < 0) player.x = 0
   if (player.x + player.width > canvas.width) player.x = canvas.width - player.width
 }
+
+// ============================================================
+// GROUP 8 — BULLETS
+// moves bullets every frame, removes them if off screen
+// ============================================================
+
+function updateBullets(player) {
+  player.shootCooldown = Math.max(0, player.shootCooldown - 1)
+  // count cooldown down every frame, stop at 0
+
+  player.bullets = player.bullets.filter(b => {
+    b.x += b.velX
+    // move bullet forward
+
+    return b.x > 0 && b.x < canvas.width
+    // keep bullet only if still on screen
+    // filter removes it automatically when this returns false
+  })
+}
+
+function drawBullets(player) {
+  player.bullets.forEach(b => {
+    ctx.fillStyle = player.color
+    // bullet matches player color
+    ctx.shadowBlur = 10
+    ctx.shadowColor = player.color
+    // glow effect matching player color
+    ctx.fillRect(b.x, b.y, 10, 4)
+    // small rectangle — 10 wide, 4 tall
+    ctx.shadowBlur = 0
+    // reset glow so it doesn't affect other drawings
+  })
+}
+
+
