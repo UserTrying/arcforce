@@ -14,6 +14,7 @@
     <button onclick="startGame('solo')">Solo</button>
     <button onclick="startGame('coop')">Co-op</button>
     <button onclick="startGame('pvp')">PvP</button>
+    <button onclick="openLeaderboard()">Leaderboard</button>
     <div id="leaderboard"></div>
   </div>
 
@@ -31,6 +32,14 @@
       // uses the full GitHub Pages path not just sw.js
     }
   </script>
+<div id="lb-modal" class="modal hidden">
+  <div class="modal-box">
+    <h2>ACF SCORES</h2>
+    <div id="lb-scores"></div>
+    <button onclick="closeLeaderboard()">Close</button>
+  </div>
+</div>
 
 </body>
+
 </html>

@@ -227,5 +227,47 @@ async function submitScore(playerName, playerScore) {
 // sync first, then display
 // ============================================================
 
+async function openLeaderboard() {
+  const modal = document.getElementById("lb-modal")
+  const box = document.getElementById("lb-scores")
+  // grab the modal and the scores container inside it
+
+  modal.classList.remove("hidden")
+  // remove hidden class to show the modal
+
+  let scores = []
+
+  if (navigator.onLine) {
+    try {
+      const response = await fetch(BIN_URL, { method: "GET", headers: HEADERS })
+      const data = await response.json()
+      scores = data.record.scores
+      saveLocalScores(scores)
+    } catch {
+      scores = getLocalScores()
+    }
+  } else {
+    scores = getLocalScores()
+  }
+  // same online/offline logic as loadLeaderboard
+  // reused here so modal always shows freshest possible data
+
+  const sorted = scores.sort((a, b) =>
+    b.score - a.score || a.name.localeCompare(b.name)
+  )
+
+  const top5 = sorted.slice(0, 5)
+  const next20 = sorted.slice(5, 25)
+
+  box.innerHTML =
+    top5.map(s => `<p class="top">${s.name} — ${s.score}</p>`).join("") +
+    next20.map(s => `<p>${s.name} — ${s.score}</p>`).join("")
+}
+
+function closeLeaderboard() {
+  document.getElementById("lb-modal").classList.add("hidden")
+  // add hidden back to close the modal
+}
+
 syncToJSONBin()
 loadLeaderboard()
