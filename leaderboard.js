@@ -287,7 +287,6 @@ async function clearScores() {
   saveLocalScores(local)
   // same filter on device storage
 
-  loadLeaderboard()
   openLeaderboard()
   // refresh the display immediately
 }
