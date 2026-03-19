@@ -4,10 +4,11 @@
 // think of this like a contact card for JSONBin
 // ============================================================
 
-const BIN_ID = "YOUR_BIN_ID"
+const BIN_ID = "69bad304c3097a1dd53881f6
+"
 // your bin's unique ID on JSONBin — like a mailbox number
 
-const API_KEY = "YOUR_API_KEY"
+const API_KEY = "$2a$10$UfULXxWgjXmfHAXfs7EqEu2psvZz7yGwJtrKP29ff/cNt2E/huo92"
 // your restricted key — proves you're allowed to access the bin
 
 const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`
