@@ -47,9 +47,10 @@ const state = {
 // ============================================================
 
 const platforms = [
-  { x: 0, y: canvas.height - 40, width: canvas.width, height: 40 },
-  // ground — full width, sits at the very bottom
-
+  { x: 0, y: canvas.height - 40, width: 180, height: 40 },
+{ x: 400, y: canvas.height - 40, width: 120, height: 40 },
+{ x: 900, y: canvas.height - 40, width: 150, height: 40 },
+// small ground chunks with large gaps — fall in the gaps and you die
   { x: 200, y: canvas.height - 160, width: 180, height: 16 },
   { x: 500, y: canvas.height - 260, width: 200, height: 16 },
   { x: 820, y: canvas.height - 180, width: 160, height: 16 },
