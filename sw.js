@@ -1,4 +1,4 @@
-const CACHE_NAME = "arcforce-v2"
+const CACHE_NAME = "arcforce-v4"
 // name for this version of the saved files
 // change the number when you update files so old cache clears
 
