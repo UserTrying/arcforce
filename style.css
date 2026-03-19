@@ -65,9 +65,10 @@ button:hover {
   color: #aaa;
   letter-spacing: 2px;
 }
-.hidden {
-  display: none;
+.modal.hidden {
+    display:none;
 }
+
 
 .modal {
   position: fixed;
