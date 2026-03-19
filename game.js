@@ -289,6 +289,7 @@ function gameLoop() {
   if (state.mode !== "solo") {
       getInput(p2)
       applyPhysics(p2)
+  }
   // process keyboard input for active players
 
   ctx.fillStyle = p1.color
