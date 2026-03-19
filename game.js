@@ -243,7 +243,9 @@ function getInput(player) {
 // called by the menu buttons in index.html
 // hides the menu, shows the canvas, kicks off the game loop
 // ============================================================
-
+function shoot(player) {
+  // placeholder — bullets group will fill this in later
+}
 function startGame(mode) {
   state.mode = mode
   // save which mode was picked
