@@ -1,7 +1,6 @@
 const CACHE_NAME = "arcforce-v2"
-// name for this version of the cache
-// change the version number when you update files
-// so old cached versions get replaced
+// name for this version of the saved files
+// change the number when you update files so old cache clears
 
 const FILES_TO_CACHE = [
   "/arcforce/",
@@ -10,10 +9,10 @@ const FILES_TO_CACHE = [
   "/arcforce/game.js",
   "/arcforce/leaderboard.js"
 ]
-// list of every file to save on the device for offline use
+// every file to save on the device for offline use
 
 self.addEventListener("install", event => {
-  // runs once when the service worker is first set up
+  // runs once when service worker is first set up
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
       return cache.addAll(FILES_TO_CACHE)
@@ -23,7 +22,7 @@ self.addEventListener("install", event => {
 })
 
 self.addEventListener("activate", event => {
-  // runs after install, cleans up any old cached versions
+  // runs after install, cleans up old cached versions
   event.waitUntil(
     caches.keys().then(keys => {
       return Promise.all(
@@ -43,13 +42,14 @@ self.addEventListener("fetch", event => {
   event.respondWith(
     caches.match(event.request).then(cached => {
       if (cached) return cached
-      // if we have it saved, serve it from cache (works offline)
+      // if we have it saved locally, serve it from cache
+      // this is what makes it work offline
 
       return fetch(event.request).then(response => {
         const copy = response.clone()
         caches.open(CACHE_NAME).then(cache => {
           cache.put(event.request, copy)
-          // save a copy of new files as they load
+          // save a copy of new files as they load for future offline use
         })
         return response
         // also return the real response to the page

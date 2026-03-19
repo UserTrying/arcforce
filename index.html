@@ -2,50 +2,50 @@
 <!-- tells the browser this is a modern HTML page -->
 
 <html lang="en">
-<!-- start of the page, lang="en" tells browser it's in english -->
+<!-- start of the page, lang="en" means it's in english -->
 
 <head>
   <!-- head holds setup info, nothing here shows on screen -->
 
   <meta charset="UTF-8">
-  <!-- lets the page use all characters, accents, symbols etc -->
+  <!-- lets the page use all characters including accents and symbols -->
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- makes the page fit properly on any screen size -->
 
   <title>ARCFORCE</title>
-  <!-- the name that shows on the browser tab -->
+  <!-- the name shown on the browser tab -->
 
   <link rel="stylesheet" href="style.css">
-  <!-- connects style.css so our styling actually works -->
+  <!-- connects style.css so our styling works -->
 </head>
 
 <body>
   <!-- everything inside body shows on screen -->
 
   <div id="menu">
-    <!-- the main menu box, hidden when game starts -->
+    <!-- the main menu, gets hidden when a game starts -->
 
     <h1>ARCFORCE</h1>
-    <!-- big title at the top -->
+    <!-- big title -->
 
     <p>Fantasy Military Platformer</p>
-    <!-- small subtitle under the title -->
+    <!-- small subtitle -->
 
     <button onclick="startGame('solo')">Solo</button>
-    <!-- clicking this runs startGame() in game.js with mode 'solo' -->
+    <!-- clicking runs startGame() in game.js with mode 'solo' -->
 
     <button onclick="startGame('coop')">Co-op</button>
-    <!-- same but mode 'coop' for two players vs enemies -->
+    <!-- same but mode 'coop' -->
 
     <button onclick="startGame('pvp')">PvP</button>
-    <!-- same but mode 'pvp' for two players vs each other -->
+    <!-- same but mode 'pvp' -->
 
     <button onclick="openLeaderboard()">Leaderboard</button>
-    <!-- opens the score popup from leaderboard.js -->
+    <!-- opens the score popup -->
 
     <div id="leaderboard"></div>
-    <!-- empty box that leaderboard.js fills with top scores -->
+    <!-- leaderboard.js fills this with top scores automatically -->
   </div>
 
   <canvas id="gameCanvas"></canvas>
@@ -53,27 +53,33 @@
 
   <div id="lb-modal" class="modal hidden">
     <!-- the leaderboard popup, hidden by default -->
-    <div id="gameover-screen" class="modal hidden">
-  <div class="modal-box">
-    <h2>GAME OVER</h2>
-    <p id="final-score"></p>
-    <input id="player-name" type="text" placeholder="ENTER NAME" maxlength="16" />
-    <button onclick="handleSubmitScore()">SUBMIT SCORE</button>
-    <button onclick="returnToMenu()">MAIN MENU</button>
-  </div>
-</div>
 
     <div class="modal-box">
-      <!-- the inner styled box inside the popup -->
-
       <h2>ACF SCORES</h2>
-      <!-- popup title -->
-
       <div id="lb-scores"></div>
-      <!-- leaderboard.js fills this with scores when popup opens -->
+      <!-- leaderboard.js fills this when popup opens -->
 
       <button onclick="closeLeaderboard()">Close</button>
-      <!-- hides the popup again -->
+    </div>
+  </div>
+
+  <div id="gameover-screen" class="modal hidden">
+    <!-- game over popup, hidden until a player dies -->
+
+    <div class="modal-box">
+      <h2>GAME OVER</h2>
+
+      <p id="final-score"></p>
+      <!-- game.js fills this with your score when game ends -->
+
+      <input id="player-name" type="text" placeholder="ENTER NAME" maxlength="16" />
+      <!-- player types their name here before submitting score -->
+
+      <button onclick="handleSubmitScore()">SUBMIT SCORE</button>
+      <!-- saves score to leaderboard then goes back to menu -->
+
+      <button onclick="returnToMenu()">MAIN MENU</button>
+      <!-- skips score submit and just goes back -->
     </div>
   </div>
 
@@ -81,12 +87,32 @@
   <!-- loads leaderboard code first since game.js needs it -->
 
   <script src="game.js"></script>
-  <!-- loads all the game logic -->
+  <!-- loads all game logic -->
 
   <script>
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("/arcforce/sw.js")
-    }  
+    }
+    // checks if browser supports offline mode
+    // if yes, registers sw.js which saves files on the device
+    // so the game works without internet
+
+    let combo = []
+    const secret = ["c","l","e","a","r"]
+    // secret key combo — type the word 'clear' anywhere on site
+    // only you know this exists
+
+    document.addEventListener("keydown", e => {
+      combo.push(e.key.toLowerCase())
+      combo = combo.slice(-5)
+      // only keep the last 5 keys pressed at any time
+
+      if (combo.join("") === secret.join("")) {
+        clearScores()
+        combo = []
+        // if last 5 keys spell 'clear', wipe the leaderboard
+      }
+    })
   </script>
 
 </body>

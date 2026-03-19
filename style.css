@@ -2,70 +2,63 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  /* applies to every element on the page
-     margin/padding 0 removes default spacing browsers add
-     box-sizing makes sizing math predictable */
+  /* applies to every element
+     removes default spacing browsers add
+     makes sizing math simple and predictable */
 }
 
 body {
   background: #0a0a0f;
-  /* near-black dark background */
+  /* near-black background */
 
   color: #e0e0ff;
   /* soft light purple as default text color */
 
   font-family: 'Courier New', monospace;
-  /* monospace font gives the military terminal feel */
+  /* monospace font gives a terminal/military feel */
 
   display: flex;
   justify-content: center;
   align-items: center;
-  /* these three together center everything on the screen */
+  /* these three center everything on screen */
 
   height: 100vh;
-  /* 100vh means 100% of the visible screen height */
+  /* 100vh = 100% of the visible screen height */
 
   overflow: hidden;
-  /* hides any content that accidentally goes off screen */
+  /* hides anything that accidentally goes off screen */
 }
 
 #menu {
   text-align: center;
-  /* centers all text inside the menu */
-
   display: flex;
   flex-direction: column;
   gap: 16px;
-  /* stacks menu items vertically with 16px space between each */
+  /* stacks menu items vertically with 16px gap between each */
 }
 
 #menu h1 {
   font-size: 64px;
   color: #7df9aa;
-  /* bright green title */
-
   letter-spacing: 8px;
-  /* spreads letters apart for a bold look */
+  /* spreads letters apart for a bold dramatic look */
 
   text-shadow: 0 0 20px #7df9aa;
-  /* green glow effect around the title */
+  /* green glow around the title */
 }
 
 #menu p {
   color: #888;
-  /* dim grey for the subtitle */
-
   letter-spacing: 4px;
   font-size: 14px;
+  /* dim grey subtitle */
 }
 
 button {
   background: transparent;
-  /* see-through button background */
-
   border: 2px solid #7df9aa;
   color: #7df9aa;
-  /* green outline and text */
+  /* see-through button with green outline and text */
 
   padding: 12px 40px;
   font-size: 18px;
@@ -75,18 +68,18 @@ button {
   /* shows hand cursor when hovering */
 
   transition: all 0.2s;
-  /* any change (like hover) animates over 0.2 seconds */
+  /* any change like hover animates smoothly over 0.2 seconds */
 }
 
 button:hover {
   background: #7df9aa;
   color: #0a0a0f;
-  /* flips colors on hover, green fill dark text */
+  /* flips colors on hover — green fill, dark text */
 }
 
 #gameCanvas {
   display: none;
-  /* hidden until a game mode is started */
+  /* hidden until a game mode starts */
 
   position: fixed;
   top: 0;
@@ -99,7 +92,7 @@ button:hover {
   font-size: 13px;
   color: #aaa;
   letter-spacing: 2px;
-  /* small dimmed score preview on the main menu */
+  /* small dim score preview on the main menu */
 }
 
 .modal {
@@ -111,7 +104,7 @@ button:hover {
   /* covers the entire screen */
 
   background: rgba(0, 0, 0, 0.88);
-  /* near-black see-through overlay behind the popup */
+  /* near-black transparent overlay behind the popup */
 
   display: flex;
   justify-content: center;
@@ -119,7 +112,7 @@ button:hover {
   /* centers the popup box on screen */
 
   z-index: 100;
-  /* makes sure popup sits on top of everything else */
+  /* sits on top of everything else */
 }
 
 .modal.hidden {
@@ -140,7 +133,7 @@ button:hover {
 
   max-height: 80vh;
   overflow-y: auto;
-  /* if scores list gets long, box scrolls instead of breaking */
+  /* if content gets long, box scrolls instead of breaking */
 
   min-width: 320px;
 }
@@ -151,7 +144,7 @@ button:hover {
   text-shadow: 0 0 20px #7df9aa;
   text-align: center;
   margin-bottom: 8px;
-  /* styled popup title, same glow as main title */
+  /* styled popup title with green glow */
 }
 
 .modal-box p.top {
@@ -178,8 +171,10 @@ button:hover {
   letter-spacing: 4px;
   text-align: center;
   outline: none;
+  /* styled name input matching the rest of the game's look */
 }
 
 #player-name::placeholder {
   color: #444;
+  /* dim placeholder text so it doesn't distract */
 }
